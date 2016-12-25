@@ -1,0 +1,12 @@
+﻿{
+  "disabled": false,
+  "bindings": [
+    {
+      "name": "myQueueItem",
+      "type": "queueTrigger",
+      "direction": "in",
+      "queueName": "bot-message-queue",
+      "connection": "AzureWebJobsStorage"
+    }
+  ]
+}

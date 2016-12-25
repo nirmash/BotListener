@@ -1,4 +1,6 @@
-﻿using System;
+﻿#r "Newtonsoft.Json"
+
+using System;
 using System.Net;
 using System.Text;
 using System.IO;
@@ -24,7 +26,7 @@ public static void Run(string myQueueItem, TraceWriter log)
     log.Info($"PBI Payload: {PBIPayload}");
     string PBIEndPoint = ConfigurationManager.AppSettings["PBIEndpoint"];
     if (PBIEndPoint == null)
-        PBIEndPoint = "https://api.powerbi.com/beta/72f988bf-86f1-41af-91ab-2d7cd011db47/datasets/7a115dff-fa60-4561-9781-080d11a6b09f/rows?key=2326%2FXlV544PTtiVwOtHjqxbgHWiXXMfAeKOgFym8ZWVy5ueyQr4fLM0hL%2BlaMGWWAPZ8wjKAD8D3%2FCw8J3aQw%3D%3D";
+        PBIEndPoint = "";
     string PBIResult = SendToPBI(PBIEndPoint, PBIPayload);
     log.Info($"Sent to PBI: {PBIResult}");
 }

@@ -99,13 +99,14 @@ private static string GetSentiment(string comment)
 
     string apiKey = ConfigurationManager.AppSettings["TextApiKey"];
     string queryUri = ConfigurationManager.AppSettings["TextApiUri"];
-
+/*
     if(apiKey==null && queryUri == null)
     {
-        apiKey = "4d5a006c1e8e4f7289d007b3e9fe426e";
-        queryUri = "https://westus.api.cognitive.microsoft.com/text/analytics/v2.0/sentiment";
+        apiKey = "";
+        queryUri = "";
 
     }
+*/
     // Create a request using a URL that can receive a post. 
     HttpWebRequest request = (HttpWebRequest)WebRequest.Create(queryUri);
     // Set the Method property of the request to POST.

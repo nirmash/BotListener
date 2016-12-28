@@ -4,7 +4,6 @@ using System;
 using System.Net;
 using System.Text;
 using System.IO;
-using System.Configuration;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
@@ -24,9 +23,7 @@ public static void Run(string myQueueItem, TraceWriter log)
     //send to PBI
     string PBIPayload = GetResultsString(questionArray);
     log.Info($"PBI Payload: {PBIPayload}");
-    string PBIEndPoint = ConfigurationManager.AppSettings["PBIEndpoint"];
-    if (PBIEndPoint == null)
-        PBIEndPoint = "";
+    string PBIEndPoint = Environment.GetEnvironmentVariable("PBIEndpoint");
     string PBIResult = SendToPBI(PBIEndPoint, PBIPayload);
     log.Info($"Sent to PBI: {PBIResult}");
 }
@@ -99,16 +96,8 @@ public class DocumentResult
 private static string GetSentiment(string comment)
 {
 
-    string apiKey = ConfigurationManager.AppSettings["TextApiKey"];
-    string queryUri = ConfigurationManager.AppSettings["TextApiUri"];
-/*
-    if(apiKey==null && queryUri == null)
-    {
-        apiKey = "";
-        queryUri = "";
-
-    }
-*/
+    string apiKey = Environment.GetEnvironmentVariable("TextApiKey");
+    string queryUri = Environment.GetEnvironmentVariable("TextApiUri");
     // Create a request using a URL that can receive a post. 
     HttpWebRequest request = (HttpWebRequest)WebRequest.Create(queryUri);
     // Set the Method property of the request to POST.

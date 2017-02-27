@@ -19,6 +19,8 @@ public static void Run(string myQueueItem, TraceWriter log)
     //get the sentiment
     string sentiment = GetSentiment(questionArray.getAnswer("Comments"));
     questionArray.questions.Add(new QandA("Sentiment", sentiment));
+    string ratings = GetRatings(questionArray);
+    questionArray.updateQuestion("Rating", ratings);
     log.Info($"Sentiment processed: {sentiment}");
     //send to PBI
     string PBIPayload = GetResultsString(questionArray);
@@ -56,6 +58,18 @@ public class ListQuestions
         }
         return "";
     }
+    public void updateQuestion(string name, string value)
+    {
+        foreach(QandA question in this.questions)
+        {
+            if (question.question == name)
+            {
+                question.answer = value;
+                return;
+            }
+        }
+        this.questions.Add(new QandA(name, value));
+    }
     public void loadJArray(JArray jarr)
     {
         foreach (JObject content in jarr.Children<JObject>())
@@ -92,6 +106,53 @@ public class DocumentResult
 {
     public double score { get; set; }
     public string id { get; set; }
+}
+private static string GetRatings(ListQuestions questionArray)
+{
+    string queryUri = Environment.GetEnvironmentVariable("MetaEndPoint");
+    // Create a request using a URL that can receive a post. 
+    HttpWebRequest request = (HttpWebRequest)WebRequest.Create(queryUri);
+    // Set the Method property of the request to POST.
+    request.Method = "GET";
+    // Get the response.
+    WebResponse response = request.GetResponse();
+    // Display the status.
+    // Console.WriteLine(((HttpWebResponse)response).StatusDescription);
+    // Get the stream containing content returned by the server.
+    Stream dataStream = response.GetResponseStream();
+    // Open the stream using a StreamReader for easy access.
+    StreamReader reader = new StreamReader(dataStream);
+    // Read the content.
+    string responseFromServer = reader.ReadToEnd();
+    // Display the content.
+    JObject docobj = JObject.Parse(responseFromServer);
+    Dictionary<string, string> questions = new Dictionary<string, string>();
+
+    JEnumerable<JToken> results = docobj["required"].Children();
+    foreach (JToken result in results)
+    {
+        string key = result.ToString();
+        JToken tkn = docobj["properties"][key];
+        if (tkn["type"][0].ToString() == "number")
+        {
+            string answer = tkn["CorrectResponse"].ToString();
+            questions.Add(key, answer);
+        }
+    }
+    int ratings = 0;
+
+    foreach(QandA answer in questionArray.questions)
+    {
+        try
+        {
+            if (answer.answer == questions[answer.question][0].ToString())
+                ratings++;
+        }
+        catch {
+        }
+    }
+    return ratings.ToString();
+
 }
 private static string GetSentiment(string comment)
 {

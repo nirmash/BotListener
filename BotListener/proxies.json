@@ -1,0 +1,13 @@
+{
+  "proxies": {
+    "redirect": {
+      "matchCondition": {
+        "methods": [
+          "GET"
+        ],
+        "route": "/site"
+      },
+      "backendUri": "https://nirsclassicfuncsotrage.blob.core.windows.net/content/index.html?st=2017-02-10T19%3A28%3A00Z&se=2018-02-11T19%3A28%3A00Z&sp=rl&sv=2015-12-11&sr=b&sig=6yRR7UTNesbE4kIcw2j4JwEA426O5rTwIdziBwKB55s%3D"
+    }
+  }
+}

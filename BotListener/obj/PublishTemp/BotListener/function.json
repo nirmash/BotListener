@@ -1,0 +1,12 @@
+﻿{
+  "bindings": [
+    {
+      "name": "myQueueItem",
+      "type": "queueTrigger",
+      "direction": "in",
+      "queueName": "survey-bot-out",
+      "connection": "serverlessappstg_STORAGE"
+    }
+  ],
+  "disabled": false
+}
